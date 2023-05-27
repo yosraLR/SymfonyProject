@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        
+        {# Style sheets #}
+        {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('assets/css/styles.css')}}">
+        {% endblock %}
+
+
+        {# JS Files : defer for js execution first#}
+        {% block javascripts %}
+        {% endblock %}
+
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+
+</html>
