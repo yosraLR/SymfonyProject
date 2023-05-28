@@ -1,0 +1,25 @@
+{% extends 'base_register.html.twig' %}
+
+{% block title %}Create Prize{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="title">Create Prize</h1>
+
+        {{ form_start(prizeForm) }}
+
+        <div class="form-group">
+            {{ form_label(prizeForm.name, 'Prize Name', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(prizeForm.name, {'attr': {'class': 'form-input'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(prizeForm.items, 'Items', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(prizeForm.items, {'attr': {'class': 'form-input'}}) }}
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create Prize</button>
+
+        {{ form_end(prizeForm) }}
+    </div>
+{% endblock %}
