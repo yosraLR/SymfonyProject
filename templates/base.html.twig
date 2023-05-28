@@ -10,21 +10,22 @@
         
         {# Style sheets #}
         {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('assets/CSS/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{ asset('assets/CSS/styles.css')}}">
+        <link rel="stylesheet" href="{{ asset('assets/CSS/bootstrap.min.css')}}" defer>
+        {# <link rel="stylesheet" href="{{ asset('assets/CSS/styles.css')}}" defer> #}
+
         {% endblock %}
 
 
         {# JS Files : defer for js execution first#}
         {% block javascripts %}
             <link rel="stylesheet" href="{{ asset('assets/js/bootstrap.bundle.min.js')}}" defer>
-            <link rel="stylesheet" href="{{ asset('assets/js/scripts.js')}}" defer>
+            {# <link rel="stylesheet" href="{{ asset('assets/js/scripts.js')}}" defer> #}
 
         {% endblock %}
 
     </head>
     <body>
-        {% include "_standards/_nav.html.twig" %}     
+        {% include "_standards/_nav.html.twig" %}   
         {% block body %}{% endblock %}
         {% include "_standards/_footer.html.twig" %}     
     </body>
