@@ -27,5 +27,17 @@
         <button class="btn btn-primary" type="submit">Create Giveaway</button>
 
         {{ form_end(giveawayForm) }}
+
+         {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success">{{ flashMessage }}</div>
+        {% endfor %}
+        
+        {% if giveawayForm.vars.data is defined %}
+            {% set giveawayId = giveawayForm.vars.data.id %}
+            {% if giveawayId is not empty %}
+                <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary">Add prizes!</a>
+            {% endif %}
+        {% endif %}
+        
     </div>
 {% endblock %}
