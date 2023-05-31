@@ -17,33 +17,38 @@ class PrizeController extends AbstractController
     #[Route('/giveaway/{giveawayId}/prize/create', name: 'prize')]
     public function createPrize(Request $request, EntityManagerInterface $entityManager, int $giveawayId): Response
     {
-        $giveawayId = $request->attributes->get('giveawayId');
-        
-        if (!$giveawayId) {
-            throw $this->createNotFoundException('Giveaway not found');
-        }
-    
         $giveaway = $entityManager->getRepository(Giveaways::class)->find($giveawayId);
-        
+
         if (!$giveaway) {
             throw new NotFoundHttpException('Giveaway not found');
         }
-    
+
         $prize = new Prize();
         $prize->setGiveaways($giveaway);
-        
+
         $form = $this->createForm(PrizeType::class, $prize);
-    
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($prize);
             $entityManager->flush();
-    
-            return $this->redirectToRoute('prize', ['giveawayId' => $giveawayId]);
+
+            return $this->redirectToRoute('giveaway_detail', ['giveawayId' => $giveawayId]);
         }
-    
+
         return $this->render('main/prize.html.twig', [
             'prizeForm' => $form->createView(),
         ]);
+    }
+
+    #[Route('/giveaway/prize/{id}/delete', name: 'delete_prize', methods: ['DELETE'])]
+    public function deletePrize(Prize $prize, EntityManagerInterface $entityManager): Response
+    {
+        $giveawayId = $prize->getGiveaways()->getId();
+
+        $entityManager->remove($prize);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('giveaway_detail', ['giveawayId' => $giveawayId]);
     }
 }
