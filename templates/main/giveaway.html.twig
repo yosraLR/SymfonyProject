@@ -1,0 +1,33 @@
+{% extends 'base_register.html.twig' %}
+
+{% block title %}Giveaway Detail{% endblock %}
+
+{% block body %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div style="text-align: center;">
+            <h2>{{ giveaway.name }}</h2>
+            <div style="margin-bottom: 20px;">
+                <img src="{{ asset('assets/img.jpg') }}" alt="Giveaway Image" style="width: 50%;">
+            </div>
+            <p>Start Date: {{ giveaway.startDate|date('d-m-Y') }}</p>
+            <p>End Date: {{ giveaway.endDate|date('d-m-Y') }}</p>
+
+            <h3>Prizes:</h3>
+            <ul style="list-style-type: none; padding: 0;">
+                {% for prize in prizes %}
+                    <li style="margin-bottom: 10px;">
+                        <div style="display: flex; align-items: center;">
+                            <div style="flex-grow: 1;">{{ prize.name }} - {{ prize.items }}</div>
+                            <form action="{{ path('delete_prize', {'id': prize.id}) }}" method="POST" style="display: inline;">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-sm" style="background-color: red; color: white; padding: 5px 10px; border: none; border-radius: 5px;">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Add prizes!</a>
+        </div>
+    </div>
+{% endblock %}
