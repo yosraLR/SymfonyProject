@@ -33,9 +33,14 @@ class Giveaways
     #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: Prize::class)]
     private Collection $PrizeID;
 
+    #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: "App\Entity\Participation", cascade: ["persist", "remove"])]
+    private Collection $participants;
+
     public function __construct()
     {
         $this->PrizeID = new ArrayCollection();
+        $this->participants = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -113,10 +118,36 @@ class Giveaways
     public function removePrizeID(Prize $prizeID): self
     {
         if ($this->PrizeID->removeElement($prizeID)) {
-            // set the owning side to null (unless already changed)
             if ($prizeID->getGiveaways() === $this) {
                 $prizeID->setGiveaways(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Users[]
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Users $user): self
+    {
+        if (!$this->participants->contains($user)) {
+            $this->participants[] = $user;
+            $user->addParticipation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Users $user): self
+    {
+        if ($this->participants->removeElement($user)) {
+            $user->removeParticipation($this);
         }
 
         return $this;
