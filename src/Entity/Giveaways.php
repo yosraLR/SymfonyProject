@@ -27,8 +27,7 @@ class Giveaways
     private ?\DateTimeInterface $EndDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'giveaways')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $OrganisatorID = null;
+     #[ORM\JoinColumn(name: "organisator_id_id", referencedColumnName: "id" , nullable: false)]
 
     #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: Prize::class)]
     private Collection $PrizeID;
