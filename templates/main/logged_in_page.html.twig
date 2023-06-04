@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_logged.html.twig' %}
 
 {% block title %}WinJoy{% endblock %}
 
@@ -10,6 +10,9 @@
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">The Ultimate Giveaway Haven</h1>
+                    {% if userName is not null %}
+                        <span>Welcome, {{ userName }}</span>
+                     {% endif %}
                     <p class="lead fw-normal text-white-50 mb-0">Unlock Your Luck and Win Big at WinJoy! Join Now for a Chance to Claim Your Share of Prizes and Excitement!</p>
                 </div>
             </div>
