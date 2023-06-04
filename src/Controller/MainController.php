@@ -29,8 +29,8 @@ class MainController extends AbstractController
         ]);
     }
     
-    #[Route('/logged-in', name: 'app_logged_in')]
-    public function loggedIn(GiveawaysRepository $giveawaysRepository): Response
+    #[Route('/user', name: 'app_logged_in')]
+    public function User(GiveawaysRepository $giveawaysRepository): Response
     {
         $currentDate = new \DateTime();
         $giveaways = $giveawaysRepository->createQueryBuilder('date')
@@ -42,7 +42,29 @@ class MainController extends AbstractController
 
         if ($this->getUser()) {
             // If the user is logged in, render the logged-in page
-            return $this->render('main/logged_in_page.html.twig', [
+            return $this->render('user/index.html.twig', [
+                'giveaways' => $giveaways,
+                'userName' => $userName,
+            ]);
+        } else {
+            // User is not logged in, redirect to the main page
+            return $this->redirectToRoute('app_main');
+        }
+    }
+    #[Route('user/organisator', name: 'organisator')]
+    public function Organisator(GiveawaysRepository $giveawaysRepository): Response
+    {
+        $currentDate = new \DateTime();
+        $giveaways = $giveawaysRepository->createQueryBuilder('date')
+            ->andWhere('date.EndDate > :currentDate')
+            ->setParameter('currentDate', $currentDate)
+            ->getQuery()
+            ->getResult();
+        $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
+
+        if ($this->getUser()) {
+            // If the user is logged in, render the logged-in page
+            return $this->render('organisator/index.html.twig', [
                 'giveaways' => $giveaways,
                 'userName' => $userName,
             ]);

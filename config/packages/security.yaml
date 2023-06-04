@@ -1,7 +1,8 @@
 security:
     role_hierarchy:
-        ROLE_PARTICIPANT: []
-        ROLE_ORGANISATEUR: [ROLE_PARTICIPANT]
+        ROLE_PARTICIPANT: ROLE_USER
+        ROLE_ORGANISATOR: ROLE_PARTICIPANT
+        ROLE_ADMIN: ROLE_ORGANISATOR
 
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -35,8 +36,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^user/organisator, roles: ROLE_ORGANISATOR }
+        - { path: ^/user, roles: ROLE_USER }
+
+
 
 when@test:
     security:
