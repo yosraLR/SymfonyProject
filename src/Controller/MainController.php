@@ -43,7 +43,7 @@ class MainController extends AbstractController
                 'giveaways' => $giveaways,
             ]);
          }
-        #[Route('/participation', name: 'participation')]
+        #[Route('/participation', name: 'participationlist')]
         public function participation(GiveawaysRepository $giveawaysRepository): Response
         {
             $currentDate = new \DateTime();
@@ -71,11 +71,12 @@ class MainController extends AbstractController
                 ->getQuery()
                 ->getResult();
             $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
-
+            $userId = $this->getUser()->getId();
             if ($this->authorizationChecker->isGranted('ROLE_USER')) {
                 return $this->render('user/index.html.twig', [
                     'giveaways' => $giveaways,
                     'userName' => $userName,
+                    'userId' => $userId,
                 ]);
             } 
             else {
