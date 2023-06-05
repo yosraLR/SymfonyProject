@@ -52,7 +52,7 @@ class MainController extends AbstractController
                 ->setParameter('currentDate', $currentDate)
                 ->getQuery()
                 ->getResult();
-            $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
+            $userName = $this->getUser() ? $this->getUser()->getUserIdentifier() : null;
 
             return $this->render('user/myparticipation.html.twig', [
                 'giveaways' => $giveaways,
@@ -70,7 +70,7 @@ class MainController extends AbstractController
                 ->setParameter('currentDate', $currentDate)
                 ->getQuery()
                 ->getResult();
-            $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
+            $userName = $this->getUser() ? $this->getUser()->getUserIdentifier() : null;
             $userId = $this->getUser()->getId();
             if ($this->authorizationChecker->isGranted('ROLE_USER')) {
                 return $this->render('user/index.html.twig', [
@@ -102,7 +102,7 @@ class MainController extends AbstractController
                     ->getResult();
             }
         
-            $userName = $currentUser ? $currentUser->getEmail() : null;
+            $userName = $currentUser ? $currentUser->getUserIdentifier() : null;
         
             return $this->render('organisator/index.html.twig', [
                 'giveaways' => $giveaways,
