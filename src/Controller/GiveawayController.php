@@ -27,7 +27,16 @@ class GiveawayController extends AbstractController
         if (!$giveaway) {
             throw $this->createNotFoundException('Giveaway not found');
         }
+        $form = $this->createForm(GiveawayFormType::class, $giveaway);
 
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $giveaway->setOrganisatorID($this->getUser());
+            $this->entityManager->persist($giveaway);
+            $this->entityManager->flush();
+    
+            return $this->redirectToRoute('giveaway', ['giveawayId' => $giveaway->getId()]);
+        }
         $prizes = $this->entityManager->getRepository(Prize::class)->findBy(['giveaways' => $giveawayId]);
 
         return $this->render('main/giveaway.html.twig', [
