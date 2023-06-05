@@ -33,7 +33,7 @@ class PrizeController extends AbstractController
             $entityManager->persist($prize);
             $entityManager->flush();
 
-            return $this->redirectToRoute('giveaway_detail', ['giveawayId' => $giveawayId]);
+            return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
         }
 
         return $this->render('main/prize.html.twig', [
@@ -49,6 +49,6 @@ class PrizeController extends AbstractController
         $entityManager->remove($prize);
         $entityManager->flush();
 
-        return $this->redirectToRoute('giveaway_detail', ['giveawayId' => $giveawayId]);
+        return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
     }
 }
