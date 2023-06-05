@@ -62,26 +62,56 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_main');
         }
     }
+    // #[Route('/organisator', name: 'organisator')]
+    // public function Organisator(GiveawaysRepository $giveawaysRepository): Response
+    // {
+    //     $currentDate = new \DateTime();
+    //     $giveaways = $giveawaysRepository->createQueryBuilder('date')
+    //         ->andWhere('date.EndDate > :currentDate')
+    //         ->setParameter('currentDate', $currentDate)
+    //         ->getQuery()
+    //         ->getResult();
+    //     $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
+        
+    //     if ($this->authorizationChecker->isGranted('ROLE_ORGANISATOR')) {
+    //         // If the user is logged in, render the logged-in page
+    //         return $this->render('organisator/index.html.twig', [
+    //             'giveaways' => $giveaways,
+    //             'userName' => $userName,
+    //         ]);
+    //     }  else {
+    //         // User is not logged in, redirect to the main page
+    //         return $this->redirectToRoute('app_main');
+    //     }
+    // }
+
+
+
     #[Route('/organisator', name: 'organisator')]
     public function Organisator(GiveawaysRepository $giveawaysRepository): Response
     {
         $currentDate = new \DateTime();
-        $giveaways = $giveawaysRepository->createQueryBuilder('date')
-            ->andWhere('date.EndDate > :currentDate')
-            ->setParameter('currentDate', $currentDate)
-            ->getQuery()
-            ->getResult();
-        $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
-        
-        if ($this->authorizationChecker->isGranted('ROLE_ORGANISATOR')) {
-            // If the user is logged in, render the logged-in page
-            return $this->render('organisator/index.html.twig', [
-                'giveaways' => $giveaways,
-                'userName' => $userName,
-            ]);
-        }  else {
-            // User is not logged in, redirect to the main page
-            return $this->redirectToRoute('app_main');
+        $currentUser = $this->getUser();
+        $giveaways = [];
+    
+        if ($currentUser && $this->authorizationChecker->isGranted('ROLE_ORGANISATOR')) {
+            $giveaways = $giveawaysRepository->createQueryBuilder('g')
+                ->join('g.OrganisatorID', 'o')
+                ->andWhere('o.id = :userId')
+                ->andWhere('g.EndDate > :currentDate')
+                ->setParameter('userId', $currentUser)
+                ->setParameter('currentDate', $currentDate)
+                ->getQuery()
+                ->getResult();
         }
+    
+        $userName = $currentUser ? $currentUser->getEmail() : null;
+    
+        return $this->render('organisator/index.html.twig', [
+            'giveaways' => $giveaways,
+            'userName' => $userName,
+        ]);
     }
+    
+    
 }
