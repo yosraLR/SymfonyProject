@@ -38,8 +38,15 @@
 
                                 </div>
                             </div>
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#!">Let's give it a try !</a></div>
+                            <!-- Product actions-->
+                           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    {% if app.user %}
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('participation', { 'giveawayId': giveaway.id, 'userId': app.user.id }) }}">Let's give it a try!</a>
+                                    {% else %}
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('app_login') }}">Log in to participate</a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>

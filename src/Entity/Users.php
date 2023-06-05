@@ -8,6 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+
+
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ApiResource]
@@ -39,8 +43,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $phone = null;
 
+    
+     #[ORM\ManyToMany(targetEntity: "App\Entity\Giveaways", mappedBy: "participants")]
+    private Collection $participations;
+
     // #[ORM\Column]
     // private ?string $phone = null;
+
+    public function __construct()
+    {
+        $this->participations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -146,5 +159,31 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    // ...
+
+    /**
+     * @return Collection|Giveaways[]
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Giveaways $giveaway): self
+    {
+        if (!$this->participations->contains($giveaway)) {
+            $this->participations[] = $giveaway;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Giveaways $giveaway): self
+    {
+        $this->participations->removeElement($giveaway);
+
+        return $this;
     }
 }

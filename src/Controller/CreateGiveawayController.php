@@ -29,7 +29,7 @@ class CreateGiveawayController extends AbstractController
 
             // $this->addFlash('success', 'Giveaway created successfully!');
 
-            return $this->redirectToRoute('prize', ['giveawayId' => $giveaway->getId()]);
+            return $this->redirectToRoute('giveaway', ['giveawayId' => $giveaway->getId()]);
         }
 
         return $this->render('main/create_giveaway.html.twig', [
