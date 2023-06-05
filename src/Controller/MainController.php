@@ -43,6 +43,23 @@ class MainController extends AbstractController
                 'giveaways' => $giveaways,
             ]);
          }
+        #[Route('/participation', name: 'participation')]
+        public function participation(GiveawaysRepository $giveawaysRepository): Response
+        {
+            $currentDate = new \DateTime();
+            $giveaways = $giveawaysRepository->createQueryBuilder('date')
+                ->andWhere('date.EndDate >= :currentDate')
+                ->setParameter('currentDate', $currentDate)
+                ->getQuery()
+                ->getResult();
+            $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
+
+            return $this->render('user/myparticipation.html.twig', [
+                'giveaways' => $giveaways,
+                'userName' => $userName,
+
+            ]);
+         }
     
         #[Route('/user', name: 'userpage')]
         public function User(GiveawaysRepository $giveawaysRepository): Response
