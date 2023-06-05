@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_org.html.twig' %}
 
 {% block title %}WinJoy{% endblock %}
 
@@ -10,18 +10,25 @@
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">The Ultimate Giveaway Haven</h1>
+                    {% if userName is not null %}
+                        <span>Welcome, {{ userName }}</span>
+                     {% endif %}
                     <p class="lead fw-normal text-white-50 mb-0">Unlock Your Luck and Win Big at WinJoy! Join Now for a Chance to Claim Your Share of Prizes and Excitement!</p>
                 </div>
             </div>
         </header>
+        <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                    
-                     {% for giveaway in giveaways %}
+                    {% for giveaway in giveaways %}
                     <div class="col mb-5">
                         <div class="card h-100">
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">New</div>
+                            {% if giveaway.getStartDate()|date('Y-m-d') >= "now"|date('Y-m-d') %}
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">New</div>
+                             {% endif %}
+
                             <img class="card-img-top" src="https://topics.amcham.com.tw/wp-content/uploads/2022/03/03_2022_topics-law-giveaway.jpg" alt="..." />
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -38,15 +45,8 @@
 
                                 </div>
                             </div>
-                            <!-- Product actions-->
-                           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    {% if app.user %}
-                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('participation', { 'giveawayId': giveaway.id, 'userId': app.user.id }) }}">Let's give it a try!</a>
-                                    {% else %}
-                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('app_login') }}">Log in to participate</a>
-                                    {% endif %}
-                                </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{path('giveaway', { 'giveawayId': giveaway.id })}}">Giveaway details</a></div>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,6 @@
                 </div>
             </div>
         </section>
-
 
 
 {% endblock %}
