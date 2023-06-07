@@ -1,0 +1,35 @@
+
+{% block title %}Participation{% endblock %}
+
+
+{% block body %}
+<a href="{{ path('app_main') }}" class="message">
+    <h1>You have already participated in this giveaway! Click to return to the home page.</h1>
+</a>
+        <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-image: url('https://images.hdqwalls.com/wallpapers/warning-4k-ou.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center; 
+        }
+
+        .message {
+            background-color: #e71212;
+            border: 1px solid #f40909;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: black;
+        }
+        .message:hover {
+            text-decoration: none; 
+        }
+    </style>
+{% endblock %}
