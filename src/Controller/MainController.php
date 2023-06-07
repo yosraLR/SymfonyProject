@@ -94,7 +94,7 @@ class MainController extends AbstractController
                 ->getResult();
             $userName = $this->getUser() ? $this->getUser()->getUserIdentifier() : null;
             $userId = $this->getUser()->getId();
-            if ($this->authorizationChecker->isGranted('ROLE_USER')) {
+            if ($this->authorizationChecker->isGranted('ROLE_USER') && !($this->isGranted('ROLE_ORGANISATOR'))) {
                 return $this->render('user/index.html.twig', [
                     'giveaways' => $giveaways,
                     'userName' => $userName,
