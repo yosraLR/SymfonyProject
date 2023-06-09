@@ -27,8 +27,12 @@
                 {% endfor %}
             </ul>
 
-            <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Add prizes!</a>
-            <a href="#!" class="btn btn-primary" style="background-color: black; margin-top: 5px;">Select Winner!</a>
+            {% if giveaway.winner is not null %}
+                <p class="btn btn-primary" style="background-color: black; margin-top: 5px;">The winner is person number {{ giveaway.winner }}</p>
+            {% else %}
+                <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Add prizes!</a>
+                <a href="{{ path('winner', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black; margin-top: 5px;">Select Winner!</a>
+            {% endif %}
 
         </div>
     </div>
