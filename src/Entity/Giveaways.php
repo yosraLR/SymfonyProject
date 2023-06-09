@@ -36,6 +36,9 @@ class Giveaways
     #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: "App\Entity\Participation", cascade: ["persist", "remove"])]
     private Collection $participants;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $winner = null;
+
     public function __construct()
     {
         $this->PrizeID = new ArrayCollection();
@@ -150,6 +153,17 @@ class Giveaways
             $user->removeParticipation($this);
         }
 
+        return $this;
+    }
+
+    public function getWinner(): ?int
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?int $winner): self
+    {
+        $this->winner = $winner;
         return $this;
     }
 }
