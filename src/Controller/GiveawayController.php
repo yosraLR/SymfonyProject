@@ -54,7 +54,7 @@ class GiveawayController extends AbstractController
     }
 
 
-        #[Route('/winner/{giveawayId}', name: 'winner')]
+    #[Route('/winner/{giveawayId}', name: 'winner')]
     public function selectWinnerAction(int $giveawayId): Response
     {
         $giveaway = $this->entityManager->getRepository(Giveaways::class)->find($giveawayId);
@@ -93,5 +93,22 @@ class GiveawayController extends AbstractController
             'prizes' => $prizes,
             'giveawayId' => $giveawayId
         ]);
+    }
+
+    #[Route('/giveaway/prize/{id}/delete', name: 'delete_prize', methods: ['DELETE'])]
+    public function deletePrize(int $prizeId): Response
+    {
+        $prize = $this->entityManager->getRepository(Prize::class)->find($prizeId);
+        $giveawayId = $prize->getGiveaways()->getId();
+
+        if (!$prize) {
+            return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
+        }
+
+        $this->entityManager->remove($prize);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
+        
     }
 }

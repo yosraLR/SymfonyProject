@@ -40,15 +40,4 @@ class PrizeController extends AbstractController
             'prizeForm' => $form->createView(),
         ]);
     }
-
-    #[Route('/giveaway/prize/{id}/delete', name: 'delete_prize', methods: ['DELETE'])]
-    public function deletePrize(Prize $prize, EntityManagerInterface $entityManager): Response
-    {
-        $giveawayId = $prize->getGiveaways()->getId();
-
-        $entityManager->remove($prize);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
-    }
 }
