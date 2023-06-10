@@ -5,4 +5,7 @@ delete_prize:
     path: /giveaway/prize/{id}/delete
     controller: App\Controller\PrizeController::deletePrize
     methods: [DELETE]
+download_data:
+    path: /download-data
+    controller: App\Controller\DownloadController::downloadData
 

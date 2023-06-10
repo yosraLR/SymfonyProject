@@ -7,6 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+
+
+
 
 #[ORM\Entity(repositoryClass: GiveawaysRepository::class)]
 class Giveaways
@@ -19,23 +23,28 @@ class Giveaways
     #[ORM\Column(length: 255)]
     private ?string $Name = null;
 
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $StartDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $EndDate = null;
 
-    #[ORM\ManyToOne(inversedBy: 'giveaways')]
+
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'giveaways')]
     #[ORM\JoinColumn(name: "organisator_id", referencedColumnName: "id" , nullable: false)]
     private ?Users $OrganisatorID = null;
 
     #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: Prize::class)]
     private Collection $PrizeID;
 
-    #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: "App\Entity\Participation", cascade: ["persist", "remove"])]
+    #[ORM\ManyToMany(targetEntity: Users::class, inversedBy: "participations")]
+    #[ORM\JoinTable(
+        name: "participations",
+        joinColumns: [new JoinColumn(name: "user_id", referencedColumnName: "id")],
+        inverseJoinColumns: [new JoinColumn(name: "organisator_id", referencedColumnName: "id")]
+    )]    
     private Collection $participants;
-
+ 
     public function __construct()
     {
         $this->PrizeID = new ArrayCollection();
