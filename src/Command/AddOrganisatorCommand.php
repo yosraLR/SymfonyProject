@@ -15,8 +15,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AddOrganisatorCommand extends Command
 {
-    protected static $defaultName = 'addOrganisator';
-    protected static $defaultDescription = 'Add a new organisator';
+    // protected static $defaultName = 'addOrganisator';
+    // protected static $defaultDescription = 'Add a new organisator';
 
     private $userRepository;
     private $passwordHasher;

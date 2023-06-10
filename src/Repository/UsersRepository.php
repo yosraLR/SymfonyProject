@@ -23,6 +23,10 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     {
         parent::__construct($registry, Users::class);
     }
+    public function getEntityManager() :\Doctrine\ORM\EntityManagerInterface
+    {
+        return $this->_em;
+    }
 
     public function save(Users $entity, bool $flush = false): void
     {

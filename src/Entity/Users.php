@@ -45,8 +45,10 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
-     #[ORM\ManyToMany(targetEntity: "App\Entity\Giveaways", mappedBy: "participants")]
+    #[ORM\ManyToMany(targetEntity: "App\Entity\Giveaways", mappedBy: "participants")]
     private Collection $participations;
+    #[ORM\OneToMany(targetEntity: "App\Entity\Giveaways", mappedBy: "OrganisatorID")]
+    private Collection $giveaways;
 
     // #[ORM\Column]
     // private ?string $phone = null;
