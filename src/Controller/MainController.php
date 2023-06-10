@@ -45,6 +45,7 @@ class MainController extends AbstractController
                 'giveaways' => $giveaways,
             ]);
          }
+
          #[Route('/participation', name: 'participationlist')]
          public function participation(GiveawaysRepository $giveawaysRepository, ParticipationRepository $participationRepository): Response
          {

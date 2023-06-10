@@ -44,7 +44,10 @@ class Giveaways
         inverseJoinColumns: [new JoinColumn(name: "organisator_id", referencedColumnName: "id")]
     )]    
     private Collection $participants;
- 
+
+    #[ORM\Column(nullable: true)]
+    private ?int $winner = null;
+
     public function __construct()
     {
         $this->PrizeID = new ArrayCollection();
@@ -159,6 +162,17 @@ class Giveaways
             $user->removeParticipation($this);
         }
 
+        return $this;
+    }
+
+    public function getWinner(): ?int
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?int $winner): self
+    {
+        $this->winner = $winner;
         return $this;
     }
 }
