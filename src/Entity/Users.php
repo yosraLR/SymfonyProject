@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use App\Entity\Giveaways;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -43,9 +43,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $phone = null;
 
-    
-     #[ORM\ManyToMany(targetEntity: "App\Entity\Giveaways", mappedBy: "participants")]
+
+
+    #[ORM\ManyToMany(targetEntity: "App\Entity\Giveaways", mappedBy: "participants")]
     private Collection $participations;
+    #[ORM\OneToMany(targetEntity: "App\Entity\Giveaways", mappedBy: "OrganisatorID")]
+    private Collection $giveaways;
 
     // #[ORM\Column]
     // private ?string $phone = null;

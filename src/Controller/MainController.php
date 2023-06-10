@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\GiveawaysRepository;
+use App\Repository\ParticipationRepository;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,24 +45,45 @@ class MainController extends AbstractController
                 'giveaways' => $giveaways,
             ]);
          }
-        #[Route('/participation', name: 'participationlist')]
-        public function participation(GiveawaysRepository $giveawaysRepository): Response
-        {
-            $currentDate = new \DateTime();
-            $giveaways = $giveawaysRepository->createQueryBuilder('date')
-                ->andWhere('date.EndDate >= :currentDate')
-                ->setParameter('currentDate', $currentDate)
-                ->getQuery()
-                ->getResult();
-            $userName = $this->getUser() ? $this->getUser()->getUserIdentifier() : null;
 
-            return $this->render('user/myparticipation.html.twig', [
-                'giveaways' => $giveaways,
-                'userName' => $userName,
-
-            ]);
+         #[Route('/participation', name: 'participationlist')]
+         public function participation(GiveawaysRepository $giveawaysRepository, ParticipationRepository $participationRepository): Response
+         {
+             $currentDate = new \DateTime();
+             $currentUser = $this->getUser();
+             $giveaways = [];
+         
+             if ($currentUser) {
+                 $participations = $participationRepository->createQueryBuilder('p')
+                     ->andWhere('p.user = :userId')
+                     ->setParameter('userId', $currentUser->getId())
+                     ->getQuery()
+                     ->getResult();
+         
+                 // Extract giveaway IDs from participations
+                 $giveawayIds = array_map(function ($participation) {
+                     return $participation->getGiveaway()->getId();
+                 }, $participations);
+         
+                 // Fetch giveaways based on the IDs
+                 $giveaways = $giveawaysRepository->createQueryBuilder('g')
+                     ->andWhere('g.id IN (:giveawayIds)')
+                    //  ->andWhere('g.EndDate >= :currentDate')
+                     ->setParameter('giveawayIds', $giveawayIds)
+                    //  ->setParameter('currentDate', $currentDate)
+                     ->getQuery()
+                     ->getResult();
+             }
+         
+             $userName = $currentUser ? $currentUser->getUserIdentifier() : null;
+         
+             return $this->render('user/myparticipation.html.twig', [
+                 'giveawaysIds' => $giveaways,
+                 'userName' => $userName,
+             ]);
          }
-    
+         
+         
         #[Route('/user', name: 'userpage')]
         public function User(GiveawaysRepository $giveawaysRepository): Response
         {
@@ -72,7 +95,7 @@ class MainController extends AbstractController
                 ->getResult();
             $userName = $this->getUser() ? $this->getUser()->getUserIdentifier() : null;
             $userId = $this->getUser()->getId();
-            if ($this->authorizationChecker->isGranted('ROLE_USER')) {
+            if ($this->authorizationChecker->isGranted('ROLE_USER') && !($this->isGranted('ROLE_ORGANISATOR'))) {
                 return $this->render('user/index.html.twig', [
                     'giveaways' => $giveaways,
                     'userName' => $userName,
@@ -90,17 +113,17 @@ class MainController extends AbstractController
             $currentDate = new \DateTime();
             $currentUser = $this->getUser();
             $giveaways = [];
-        
-            if ($currentUser && $this->authorizationChecker->isGranted('ROLE_ORGANISATOR')) {
-                $giveaways = $giveawaysRepository->createQueryBuilder('g')
-                    ->join('g.OrganisatorID', 'o')
-                    ->andWhere('o.id = :userId')
-                    ->andWhere('g.EndDate > :currentDate')
-                    ->setParameter('userId', $currentUser)
-                    ->setParameter('currentDate', $currentDate)
+
+            if ($currentUser && $this->isGranted('ROLE_ORGANISATOR')) {
+                $giveaways = $giveawaysRepository->createQueryBuilder('giveaway')
+                    ->andWhere('giveaway.OrganisatorID = :currentUser')
+                    //->andWhere('giveaway.EndDate > :currentDate')
+                    ->setParameter('currentUser', $currentUser)
+                    //->setParameter('currentDate', $currentDate)
                     ->getQuery()
                     ->getResult();
             }
+
         
             $userName = $currentUser ? $currentUser->getUserIdentifier() : null;
         

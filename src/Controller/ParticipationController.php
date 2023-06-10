@@ -12,21 +12,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
-
-
 class ParticipationController extends AbstractController
 {
-    
-    #[Route('participation/{giveawayId}/{userId}', name: 'participation')]
-     
+    #[Route('/participation/{giveawayId}/{userId}', name: 'participation')]
     public function participation(Request $request, EntityManagerInterface $entityManager, $giveawayId, $userId): Response
     {
-
         $giveaway = $entityManager->getRepository(Giveaways::class)->find($giveawayId);
         $user = $entityManager->getRepository(Users::class)->find($userId);
 
         if (!$giveaway || !$user) {
             throw $this->createNotFoundException('Giveaway or User not found');
+        }
+
+        // Check if the user has already participated in the giveaway
+        $existingParticipation = $entityManager->getRepository(Participation::class)->findOneBy([
+            'giveaway' => $giveaway,
+            'user' => $user,
+        ]);
+
+        if ($existingParticipation) {
+            return $this->render('main/participate_already.html.twig');
         }
 
         $participation = new Participation($user, $giveaway);
@@ -46,4 +51,3 @@ class ParticipationController extends AbstractController
         ]);
     }
 }
-

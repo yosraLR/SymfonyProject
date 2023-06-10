@@ -2,7 +2,10 @@ controllers:
     resource: ../src/Controller/
     type: attribute
 delete_prize:
-    path: '/prize/delete/{prizeId}'
-    controller: App\Controller\GiveawayController::deletePrize
-
+    path: /giveaway/prize/{id}/delete
+    controller: App\Controller\PrizeController::deletePrize
+    methods: [DELETE]
+download_data:
+    path: /download-data
+    controller: App\Controller\DownloadController::downloadData
 
