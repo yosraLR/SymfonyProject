@@ -109,6 +109,6 @@ class GiveawayController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
-        
+
     }
 }
