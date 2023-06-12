@@ -2,9 +2,14 @@
 namespace App\Entity;
 
 use App\Repository\ParticipationRepository;
-use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
 
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Prize;
+use App\Entity\Users;
 #[ORM\Entity(repositoryClass: ParticipationRepository::class)]
+#[ApiResource]
+
 class Participation
 {
     #[ORM\Id]

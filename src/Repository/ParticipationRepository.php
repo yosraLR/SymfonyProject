@@ -20,6 +20,24 @@ class ParticipationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Participation::class);
     }
+    
+    public function findParticipatedUserIdsByGiveaway(int $giveawayId): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p')
+            ->andWhere('p.giveaway = :giveawayId')
+            ->setParameter('giveawayId', $giveawayId);
+    
+        $participations = $qb->getQuery()->getResult();
+    
+        $userIds = [];
+        foreach ($participations as $participation) {
+            $userIds[] = $participation->getUser()->getId();
+        }
+    
+        return $userIds;
+    }
+    
 
     public function save(Participation $entity, bool $flush = false): void
     {

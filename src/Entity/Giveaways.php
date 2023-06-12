@@ -3,12 +3,21 @@
 namespace App\Entity;
 
 use App\Repository\GiveawaysRepository;
+use ApiPlatform\Metadata\ApiResource;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+
+
+
 
 #[ORM\Entity(repositoryClass: GiveawaysRepository::class)]
+#[ApiResource]
+
+
 class Giveaways
 {
     #[ORM\Id]
@@ -19,22 +28,30 @@ class Giveaways
     #[ORM\Column(length: 255)]
     private ?string $Name = null;
 
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $StartDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $EndDate = null;
 
-    #[ORM\ManyToOne(inversedBy: 'giveaways')]
+
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'giveaways')]
     #[ORM\JoinColumn(name: "organisator_id", referencedColumnName: "id" , nullable: false)]
     private ?Users $OrganisatorID = null;
 
     #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: Prize::class)]
     private Collection $PrizeID;
 
-    #[ORM\OneToMany(mappedBy: 'giveaways', targetEntity: "App\Entity\Participation", cascade: ["persist", "remove"])]
+    #[ORM\ManyToMany(targetEntity: Users::class, inversedBy: "participations")]
+    #[ORM\JoinTable(
+        name: "participations",
+        joinColumns: [new JoinColumn(name: "user_id", referencedColumnName: "id")],
+        inverseJoinColumns: [new JoinColumn(name: "organisator_id", referencedColumnName: "id")]
+    )]    
     private Collection $participants;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $winner = null;
 
     public function __construct()
     {
@@ -150,6 +167,17 @@ class Giveaways
             $user->removeParticipation($this);
         }
 
+        return $this;
+    }
+
+    public function getWinner(): ?int
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?int $winner): self
+    {
+        $this->winner = $winner;
         return $this;
     }
 }

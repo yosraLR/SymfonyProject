@@ -6,7 +6,7 @@
  <body>
         <!-- Header-->
         
-        <header class="bg-dark py-5">
+        <header class="bg-dark py-3">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">The Ultimate Giveaway Haven</h1>
@@ -40,12 +40,20 @@
                                         <div class="bi-star-fill"></div>
                                         <div class="bi-star-fill"></div>
                                     </div>
-                                    {{giveaway.getStartDate()|date('Y-m-d')}}
+                                    {{giveaway.getEndDate()|date('Y-m-d')}}
 
                                 </div>
                             </div>
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('participation', {'giveawayId': giveaway.id, 'userId': userId}) }}">Let's give it a try !</a></div>
+                                <div class="text-center">
+                                {% if giveaway.startDate|date('Y-m-d') > "now"|date('Y-m-d') %}
+                                <div class="alert alert-warning mt-3" role="alert" style="padding: 7px; font-size: 12px;">
+                                Please wait until {{giveaway.getStartDate()|date('Y-m-d')}}
+                                </div>
+                                {% else %}
+                                <a class="btn btn-outline-dark mt-auto" href="{{ path('participation', {'giveawayId': giveaway.id, 'userId': userId}) }}">Let's give it a try !</a>                           
+                                {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -53,6 +61,17 @@
                 </div>
             </div>
         </section>
-
+        <style>
+            .py-3{
+                background-image:url('https://wallpapercave.com/wp/wp4749935.png');
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center; 
+            }
+            .text-white-50 {
+                --bs-text-opacity: 1;
+                color: rgb(68, 230, 231) !important;
+            }
+        </style>
 
 {% endblock %}

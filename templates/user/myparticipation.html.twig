@@ -6,7 +6,7 @@
  <body>
         <!-- Header-->
         
-        <header class="bg-dark py-5">
+        <header class="bg-dark py-3">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">The Ultimate Giveaway Haven</h1>
@@ -22,7 +22,7 @@
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                    
-                     {% for giveaway in giveaways %}
+                {% for giveaway in giveawaysIds %}
                     <div class="col mb-5">
                         <div class="card h-100">
                             {% if giveaway.getStartDate()|date('Y-m-d') >= "now"|date('Y-m-d') %}
@@ -45,7 +45,24 @@
                                 </div>
                             </div>
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{path('app_pop_up_win')}}">Find out who's the Winner !</a></div>
+                            
+                                {# <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="">Find out who's the Winner !</a></div> #}
+
+                                <div class="text-center">
+                                {% if giveaway.winner != null %}
+                                    {% if currentUser == giveaway.winner %}
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('app_pop_up_win') }}">Find out who's the Winner!</a>
+                                    {% else %}
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('app_pop_up_loser') }}">Find out who's the Winner!</a>
+                                    {% endif %}
+                                {% else %}
+                                 <div class="alert alert-warning mt-3" role="alert" style="padding: 7px; font-size: 12px;">
+                                Winner not yet selected !
+                                </div>    
+                                {% endif %}
+
+                            </div>
+
                             </div>
                         </div>
                     </div>
@@ -54,5 +71,16 @@
             </div>
         </section>
 
-
+<style>
+    .py-3{
+        background-image:url('https://wallpapercave.com/wp/wp4749935.png');
+         background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center; 
+    }
+    .text-white-50 {
+        --bs-text-opacity: 1;
+        color: rgb(68, 230, 231) !important;
+    }
+</style>
 {% endblock %}

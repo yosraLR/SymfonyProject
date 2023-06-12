@@ -24,8 +24,7 @@
             {{ form_widget(giveawayForm.endDate, { 'attr': {'class': 'form-input'} }) }}
         </div>
 
-        <button class="btn btn-primary" type="submit">Create Giveaway</button>
-
+        <button class="btn btn-primary" type="submit" style="margin-left:9px;">Create Giveaway</button>
         {{ form_end(giveawayForm) }}
 
          {% for flashMessage in app.session.flashbag.get('success') %}
@@ -40,4 +39,27 @@
         {% endif %}
         
     </div>
+    <style>
+    body{
+        background-image:url('https://wallpapercave.com/wp/wp4749935.png');
+        background-repeat: no-repeat;
+        background-position: center;  
+        }
+    .container {
+        background-color: rgba(255, 255, 255, 0);
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 400px;
+    }
+    .title {
+        color: #f4f4f4;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+        color: white;
+    }
+    </style>
 {% endblock %}
