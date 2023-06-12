@@ -80,6 +80,7 @@ class MainController extends AbstractController
              return $this->render('user/myparticipation.html.twig', [
                  'giveawaysIds' => $giveaways,
                  'userName' => $userName,
+                 'currentUser' => $currentUser->getId()
              ]);
          }
          

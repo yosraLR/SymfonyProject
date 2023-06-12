@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GiveawaysRepository;
+use ApiPlatform\Metadata\ApiResource;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,6 +15,9 @@ use Doctrine\ORM\Mapping\JoinColumn;
 
 
 #[ORM\Entity(repositoryClass: GiveawaysRepository::class)]
+#[ApiResource]
+
+
 class Giveaways
 {
     #[ORM\Id]

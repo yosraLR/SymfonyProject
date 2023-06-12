@@ -40,12 +40,20 @@
                                         <div class="bi-star-fill"></div>
                                         <div class="bi-star-fill"></div>
                                     </div>
-                                    {{giveaway.getStartDate()|date('Y-m-d')}}
+                                    {{giveaway.getEndDate()|date('Y-m-d')}}
 
                                 </div>
                             </div>
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('participation', {'giveawayId': giveaway.id, 'userId': userId}) }}">Let's give it a try !</a></div>
+                                <div class="text-center">
+                                {% if giveaway.startDate|date('Y-m-d') > "now"|date('Y-m-d') %}
+                                <div class="alert alert-warning mt-3" role="alert" style="padding: 7px; font-size: 12px;">
+                                Please wait until {{giveaway.getStartDate()|date('Y-m-d')}}
+                                </div>
+                                {% else %}
+                                <a class="btn btn-outline-dark mt-auto" href="{{ path('participation', {'giveawayId': giveaway.id, 'userId': userId}) }}">Let's give it a try !</a>                           
+                                {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
