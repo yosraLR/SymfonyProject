@@ -13,33 +13,43 @@
             <p>End Date: {{ giveaway.endDate|date('d-m-Y') }}</p>
 
             <h3>Prizes:</h3>
-            <ul style="list-style-type: none; padding: 0;">
-                {% for prize in prizes %}
-                    <li style="margin-bottom: 10px;">
-                        <div style="display: flex; align-items: center;">
-                            <div style="flex-grow: 1;">{{ prize.name }} - {{ prize.items }}</div>
-                            <form method="POST" action="{{ path('delete_prize', {'prizeId': prize.id}) }}"  style="display: inline;">
-                                <button type="submit" class="btn btn-sm" style="background-color: red; color: white; padding: 5px 10px; border: none; border-radius: 5px;">Delete</button>
-                            </form>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+            <table style="margin: 0 auto; width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid black; padding: 8px;">Name</th>
+                        <th style="border: 1px solid black; padding: 8px;">Items</th>
+                        <th style="border: 1px solid black; padding: 8px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prize in prizes %}
+                        <tr>
+                            <td style="border: 1px solid black; padding: 8px;">{{ prize.name }}</td>
+                            <td style="border: 1px solid black; padding: 8px;">{{ prize.items }}</td>
+                            <td style="border: 1px solid black; padding: 8px;">
+                                <form method="POST" action="{{ path('delete_prize', {'prizeId': prize.id}) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm" style="background-color: red; color: white; padding: 5px 10px; border: none; border-radius: 5px;">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px;"></div>
+
             {% if giveaway.winner is not null %}
                 <p class="btn btn-primary" style="background-color: black; margin-top: 5px;">The winner is person number {{ giveaway.winner }}</p>
             {% else %}
                 <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Add prizes!</a>
 
                  {% if giveaway.getEndDate|date('Y-m-d') >= "now"|date('Y-m-d') %}
-                        <div class="btn btn-primary" style="background-color: red;">
-                        It's not over yet.
+                        <div class="btn btn-primary" style="background-color: red; pointer-events: none; opacity: 0.5;">
+                        End date not yet reached! Come back later to select the winner!
                         </div>
                         {% else %}
                         <a href="{{ path('winner', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Select Winner!</a>
                 {% endif %}
-
-                <a href="{{ path('winner', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Select Winner!</a>
-
             {% endif %}
 
         </div>
