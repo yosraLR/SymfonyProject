@@ -29,6 +29,7 @@
                 <p class="btn btn-primary" style="background-color: black; margin-top: 5px;">The winner is person number {{ giveaway.winner }}</p>
             {% else %}
                 <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Add prizes!</a>
+
                  {% if giveaway.getEndDate|date('Y-m-d') >= "now"|date('Y-m-d') %}
                         <div class="btn btn-primary" style="background-color: red;">
                         It's not over yet.
@@ -36,6 +37,9 @@
                         {% else %}
                         <a href="{{ path('winner', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Select Winner!</a>
                 {% endif %}
+
+                <a href="{{ path('winner', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Select Winner!</a>
+
             {% endif %}
 
         </div>

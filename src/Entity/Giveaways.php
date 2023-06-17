@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GiveawaysRepository;
+use ApiPlatform\Metadata\ApiResource;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,6 +15,9 @@ use Doctrine\ORM\Mapping\JoinColumn;
 
 
 #[ORM\Entity(repositoryClass: GiveawaysRepository::class)]
+#[ApiResource]
+
+
 class Giveaways
 {
     #[ORM\Id]
@@ -44,7 +49,10 @@ class Giveaways
         inverseJoinColumns: [new JoinColumn(name: "organisator_id", referencedColumnName: "id")]
     )]    
     private Collection $participants;
- 
+
+    #[ORM\Column(nullable: true)]
+    private ?int $winner = null;
+
     public function __construct()
     {
         $this->PrizeID = new ArrayCollection();
@@ -159,6 +167,17 @@ class Giveaways
             $user->removeParticipation($this);
         }
 
+        return $this;
+    }
+
+    public function getWinner(): ?int
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?int $winner): self
+    {
+        $this->winner = $winner;
         return $this;
     }
 }
