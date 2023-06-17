@@ -40,12 +40,29 @@
                                         <div class="bi-star-fill"></div>
                                         <div class="bi-star-fill"></div>
                                     </div>
-                                    {{giveaway.getStartDate()|date('Y-m-d')}}
+                                    {{giveaway.getEndDate()|date('Y-m-d')}}
 
                                 </div>
                             </div>
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{path('app_pop_up_win')}}">How's The Winner ?</a></div>
+                            
+                                {# <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="">Find out who's the Winner !</a></div> #}
+
+                                <div class="text-center">
+                                {% if giveaway.winner != null %}
+                                    {% if currentUser == giveaway.winner %}
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('app_pop_up_win') }}">Find out who's the Winner!</a>
+                                    {% else %}
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ path('app_pop_up_loser') }}">Find out who's the Winner!</a>
+                                    {% endif %}
+                                {% else %}
+                                 <div class="alert alert-warning mt-3" role="alert" style="padding: 7px; font-size: 12px;">
+                                Winner not yet selected !
+                                </div>    
+                                {% endif %}
+
+                            </div>
+
                             </div>
                         </div>
                     </div>
