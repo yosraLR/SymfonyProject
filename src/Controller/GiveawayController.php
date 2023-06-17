@@ -11,18 +11,20 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ParticipationRepository;
+use App\Service\WinnerService;
 
 
 class GiveawayController extends AbstractController
 {
     private $entityManager;
     private $participationRepository;
+    private $winnerService;
 
-
-    public function __construct(EntityManagerInterface $entityManager , ParticipationRepository $participationRepository)
+    public function __construct(EntityManagerInterface $entityManager , ParticipationRepository $participationRepository, WinnerService $winnerService)
     {
         $this->entityManager = $entityManager;
         $this->participationRepository = $participationRepository;
+        $this->winnerService = $winnerService;
 
     }
 
@@ -52,47 +54,12 @@ class GiveawayController extends AbstractController
             'prizes' => $prizes,
         ]);
     }
-
-
     #[Route('/winner/{giveawayId}', name: 'winner')]
     public function selectWinnerAction(int $giveawayId): Response
     {
-        $giveaway = $this->entityManager->getRepository(Giveaways::class)->find($giveawayId);
-        $winner = $giveaway->getWinner();
-        $prizes = $this->entityManager->getRepository(Prize::class)->findBy(['giveaways' => $giveawayId]);
+        $result = $this->winnerService->selectWinnerAction($giveawayId);
 
-
-        if ($winner) {
-            return $this->render('main/giveaway.html.twig', [
-                'giveaway' => $giveaway,
-                'prizes' => $prizes,
-                'giveawayId' => $giveawayId
-
-            ]);
-        }
-
-        $participatedUserIds = $this->participationRepository->findParticipatedUserIdsByGiveaway($giveawayId);
-
-        if (empty($participatedUserIds)) {
-            return $this->render('main/giveaway.html.twig', [
-                'giveaway' => $giveaway,
-                'winner' => null, 
-                'prizes' => $prizes,
-                'giveawayId' => $giveawayId
-            ]);
-        }
-
-        $winnerId = $participatedUserIds[array_rand($participatedUserIds)];
-        $giveaway->setWinner($winnerId);
-        $this->entityManager->flush();
-
-
-        return $this->render('main/giveaway.html.twig', [
-            'giveaway' => $giveaway,
-            'winnerId' => $winnerId,
-            'prizes' => $prizes,
-            'giveawayId' => $giveawayId
-        ]);
+        return $this->render('main/giveaway.html.twig', $result);
     }
 
     #[Route('/giveaway/prize/{id}/delete', name: 'delete_prize', methods: ['DELETE'])]
