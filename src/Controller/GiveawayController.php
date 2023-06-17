@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\GiveawaysRepository;
 use App\Entity\Giveaways;
 use App\Entity\Prize;
 use App\Form\GiveawayFormType;
@@ -11,9 +12,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ParticipationRepository;
+
+use App\Entity\Participation;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use App\Service\WinnerService;
 
 
+#[Route('/api')]
 class GiveawayController extends AbstractController
 {
     private $entityManager;
@@ -77,5 +83,47 @@ class GiveawayController extends AbstractController
 
         return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
 
+    }
+    #[Route('/api/getparticipants/', name: 'getdata')]
+    public function indexJson(GiveawaysRepository $giveawaysRepository): JsonResponse
+    {
+        $user = $this->getUser(); // Récupère l'organisateur connecté
+        $giveaways = $giveawaysRepository->findBy(['OrganisatorID' => $user]);
+
+        
+        $responseData = [];
+        foreach ($giveaways as $giveaway) {
+            $participants = $this->entityManager
+                ->getRepository(Participation::class)
+                ->createQueryBuilder('p')
+                ->select('p')
+                ->join('p.giveaway', 'g')
+                ->where('g.id = :giveawayId')
+                ->setParameter('giveawayId', $giveaway->getId())
+                ->getQuery()
+                ->getResult();
+
+            $participantsData = [];
+            foreach ($participants as $participant) {
+                $participantsData[] = [
+                    'id' => $participant->getId(),
+                    'first_name' => $participant->getFirstName(),
+                    'last_name' => $participant->getLastName(),
+                    'address' => $participant->getAddress(),
+                    'phone' => $participant->getPhone(),
+                    'email' => $participant->getEmail(),
+                ];
+            }
+
+            $responseData[] = [
+                'id' => $giveaway->getId(),
+                'organizer_id' => $giveaway->getOrganisatorId(),
+                'name' => $giveaway->getName(),
+                'participants' => $participantsData,
+            ];
+        }
+        $jsonResponse = new JsonResponse($responseData);
+        $jsonResponse->setEncodingOptions(JSON_PRETTY_PRINT);
+        return $jsonResponse;
     }
 }
