@@ -40,6 +40,10 @@
 
             {% if giveaway.winner is not null %}
                 <p class="btn btn-primary" style="background-color: black; margin-top: 5px;">The winner is person number {{ giveaway.winner }}</p>
+                <form method="POST" action="{{ path('mail',{'giveawayId': giveaway.id}) }}" style="display: inline;">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('mail') }}" />
+                    <button type="submit" class="btn btn-primary" style="background-color: black;">Send Email</button>
+                </form>
             {% else %}
                 <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Add prizes!</a>
 

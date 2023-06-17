@@ -12,6 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ParticipationRepository;
+<<<<<<< Updated upstream
+=======
+use App\Service\MailService;
+use App\Service\WinnerService;
+>>>>>>> Stashed changes
 
 use App\Entity\Participation;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,13 +29,32 @@ class GiveawayController extends AbstractController
 {
     private $entityManager;
     private $participationRepository;
+<<<<<<< Updated upstream
     private $winnerService;
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 
     public function __construct(EntityManagerInterface $entityManager , ParticipationRepository $participationRepository, WinnerService $winnerService)
     {
         $this->entityManager = $entityManager;
         $this->participationRepository = $participationRepository;
+<<<<<<< Updated upstream
         $this->winnerService = $winnerService;
+=======
+=======
+    private $winnerService;
+    private $mailService;
+
+    public function __construct(EntityManagerInterface $entityManager , ParticipationRepository $participationRepository, WinnerService $winnerService, MailService $mailService)
+    {
+        $this->entityManager = $entityManager;
+        $this->participationRepository = $participationRepository;
+        $this->winnerService = $winnerService;
+        $this->mailService = $mailService;
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
     }
 
@@ -84,6 +108,7 @@ class GiveawayController extends AbstractController
         return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
 
     }
+<<<<<<< Updated upstream
     #[Route('/api/getparticipants/', name: 'getdata')]
     public function indexJson(GiveawaysRepository $giveawaysRepository): JsonResponse
     {
@@ -125,5 +150,20 @@ class GiveawayController extends AbstractController
         $jsonResponse = new JsonResponse($responseData);
         $jsonResponse->setEncodingOptions(JSON_PRETTY_PRINT);
         return $jsonResponse;
+=======
+
+    #[Route('/giveaway/mail-service/{giveawayId}', name: 'mail', methods: ['POST'])]
+
+    public function sendEmail(int $giveawayId): Response
+    {
+        $from = 'winjoy012@gmail.com';
+        $to = 'larhdidyosra12@gmail.com';
+        $subject = 'Test Email';
+        $content = 'This is a test email.';
+
+        $this->mailService->sendEmail($from, $to, $subject, $content);
+
+        return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
+>>>>>>> Stashed changes
     }
 }
