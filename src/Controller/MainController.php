@@ -45,6 +45,12 @@ class MainController extends AbstractController
                 'giveaways' => $giveaways,
             ]);
          }
+         #[Route('/about', name: 'about')]
+         public function about(): Response
+         {
+ 
+             return $this->render('main/about.html.twig');
+          }
 
          #[Route('/participation', name: 'participationlist')]
          public function participation(GiveawaysRepository $giveawaysRepository, ParticipationRepository $participationRepository): Response
@@ -133,27 +139,4 @@ class MainController extends AbstractController
                 'userName' => $userName,
             ]);
         }
-        
-        // #[Route('/admin', name: 'admin')]
-        // public function Organisator(GiveawaysRepository $giveawaysRepository): Response
-        // {
-        //     $currentDate = new \DateTime();
-        //     $giveaways = $giveawaysRepository->createQueryBuilder('date')
-        //         ->andWhere('date.EndDate > :currentDate')
-        //         ->setParameter('currentDate', $currentDate)
-        //         ->getQuery()
-        //         ->getResult();
-        //     $userName = $this->getUser() ? $this->getUser()->getEmail() : null;
-            
-        //     if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-        //         // If the user is logged in, render the logged-in page
-        //         return $this->render('organisator/index.html.twig', [
-        //             'giveaways' => $giveaways,
-        //             'userName' => $userName,
-        //         ]);
-        //     }  else {
-        //         // User is not logged in, redirect to the main page
-        //         return $this->redirectToRoute('app_main');
-        //     }
-        // }
     }
