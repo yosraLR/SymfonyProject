@@ -27,3 +27,7 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Service\WinnerService:
         autowire: true
+        
+    App\Service\MailService:
+        arguments:
+            $mailer: '@Symfony\Component\Mailer\MailerInterface'

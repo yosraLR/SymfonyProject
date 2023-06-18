@@ -12,11 +12,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ParticipationRepository;
-
+use App\Service\MailService;
+use App\Service\WinnerService;
 use App\Entity\Participation;
+use App\Entity\Users;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use App\Service\WinnerService;
 
 
 #[Route('/api')]
@@ -25,12 +26,15 @@ class GiveawayController extends AbstractController
     private $entityManager;
     private $participationRepository;
     private $winnerService;
+    private $mailService;
 
-    public function __construct(EntityManagerInterface $entityManager , ParticipationRepository $participationRepository, WinnerService $winnerService)
+    public function __construct(EntityManagerInterface $entityManager , ParticipationRepository $participationRepository, WinnerService $winnerService, MailService $mailService)
     {
         $this->entityManager = $entityManager;
         $this->participationRepository = $participationRepository;
         $this->winnerService = $winnerService;
+        $this->mailService = $mailService;
+
 
     }
 
@@ -125,5 +129,26 @@ class GiveawayController extends AbstractController
         $jsonResponse = new JsonResponse($responseData);
         $jsonResponse->setEncodingOptions(JSON_PRETTY_PRINT);
         return $jsonResponse;
+    }
+
+    #[Route('/giveaway/mail-service/{giveawayId}', name: 'mail', methods: ['POST'])]
+
+    public function sendEmail(int $giveawayId): Response
+    {
+        $giveaway = $this->entityManager->getRepository(Giveaways::class)->find($giveawayId);
+
+        $winnerid = $giveaway->getWinner();
+
+        $winner = $this->entityManager->getRepository(Users::class)->find($winnerid);
+
+
+        $from = 'winjoy012@gmail.com';
+        $to = $winner->getEmail();
+        $subject = 'You are the winner of giveaway number ' . $giveawayId;
+        $content = 'winner';
+
+        $this->mailService->sendEmail($from, $to, $subject, $content);
+
+        return $this->redirectToRoute('giveaway', ['giveawayId' => $giveawayId]);
     }
 }

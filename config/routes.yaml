@@ -7,4 +7,8 @@ delete_prize:
 download_data:
     path: /download-data
     controller: App\Controller\DownloadController::downloadData
+send_email:
+    path: '/mail-service/{giveawayId}'
+    controller: App\Controller\GiveawayController::sendEmail
+    methods: [POST]
 

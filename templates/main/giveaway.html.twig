@@ -27,9 +27,13 @@
                             <td style="border: 1px solid black; padding: 8px;">{{ prize.name }}</td>
                             <td style="border: 1px solid black; padding: 8px;">{{ prize.items }}</td>
                             <td style="border: 1px solid black; padding: 8px;">
-                                <form method="POST" action="{{ path('delete_prize', {'prizeId': prize.id}) }}" style="display: inline;">
-                                    <button type="submit" class="btn btn-sm" style="background-color: red; color: white; padding: 5px 10px; border: none; border-radius: 5px;">Delete</button>
-                                </form>
+                                {% if giveaway.getStartDate|date('Y-m-d') < "now"|date('Y-m-d') %}
+                                    <button type="submit" class="btn btn-sm" style="background-color: red; color: white; padding: 5px 10px; border: none; border-radius: 5px;" disabled>Delete</button>
+                                {% else %}
+                                    <form method="POST" action="{{ path('delete_prize', {'prizeId': prize.id}) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm" style="background-color: red; color: white; padding: 5px 10px; border: none; border-radius: 5px;">Delete</button>
+                                    </form>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -40,6 +44,11 @@
 
             {% if giveaway.winner is not null %}
                 <p class="btn btn-primary" style="background-color: black; margin-top: 5px;">The winner is person number {{ giveaway.winner }}</p>
+                <div style="margin-top: 10px;"></div>
+                <form method="POST" action="{{ path('mail',{'giveawayId': giveaway.id}) }}" style="display: inline;">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('mail') }}" />
+                    <button type="submit" class="btn btn-primary" style="background-color: black;">Inform Winner</button>
+                </form>
             {% else %}
                 <a href="{{ path('prize', {'giveawayId': giveawayId}) }}" class="btn btn-primary" style="background-color: black;">Add prizes!</a>
 
